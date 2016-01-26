@@ -10,11 +10,12 @@
 // Note: If you issue an XSS attack, please make it innocuous enough to be educational, rather than disruptive.
 
 // Allow users to select a username and send messagaes
-$(document).ready(function(){
 
 var app = {
   
   server : 'https://api.parse.com/1/classes/chatterbox?order=-createdAt',
+  
+  username : window.location.search.slice(10),
   
   init : function(value){
     return value;
@@ -57,41 +58,102 @@ var app = {
   clearMessages : function(){
     $('#chats').empty();
   },
-  
+  hideMessages : function(room){
+    var messages = $('#chats').children();
+    console.log(messages)
+    // look at all messages, if class !== room we entered, hide them
+    // SELECTOR NOT WORKING, MAYBE CUZ NODES ARE ADDED DYNAMICALLY
+    console.log($('.'+room).html());
+    $('.'+room).hide();
+    //messages.not('.'+room).hide();
+  },
   addMessage : function(msg){
       var username = _.escape(msg.username);
       var text = _.escape(msg.text);
-      var message_div = $('<div>' + username + ' : ' + text + '</div>');
+      var room = _.escape(msg.roomname);
+      var message_div = $('<div class = '+room+'"><span class = "username">' + username + '</span>' + ' : ' + text + '</div>');
       $('#chats').append(message_div);
+      app.addRoom(room);
   },
   
-  addRoom : function(name){
-    $('#roomSelect').append('<option value="'+name+'">'+name+'</option>');
+  addRoom : function(room){
+    if(!app.roomList[room]){
+      app.roomList[room] = true
+      $('#roomSelect').append('<option value="'+room+'">'+room+'</option>');
+    };
   },
   
-  addFriend : function(){}
+  roomList : {
+    'BoomBoom':true,
+    'Champagne': true,
+    'VIP Room': true,
+    'DarkRoom': true
+  },
   
+  addFriend : function(username){
+    app.friendList[username] = true;
+  },
+
+  friendList : {},
+  
+  handleSubmit : function(message){
+    app.send(message);
+  }
 };
 
 
 //app.send(message);
 app.fetch();
 
-setInterval(function(){app.fetch();}, 5000);
+setInterval(function(){
+  app.clearMessages();
+  app.fetch();
+}, 100000);
 
 
 /////////////////// Event Listeners ///////////////////////////
-$('form').submit(function(e){
-  e.preventDefault();
-  var message = $('.message').val();
-  var room = $('#roomSelect').val();
-  console.log($('.message').val());
-});
+
+// var message = {
+//           username: 'Mel Brooks',
+//           text: 'It\'s good to be the king',
+//           roomname: 'lobby'
+//         };
+
+$(document).ready(function(){
+
+  $('form').submit(function(e){
+    e.preventDefault();
+    var text = $('.message').val();
+    var room = $('#roomSelect').val();
+
+    var message = {
+      username: app.username,
+      text: text,
+      roomname: room
+    };
+
+    app.handleSubmit(message);
+    $('.message').val('');
+  });
+  
+  $('select').change(function(){
+    var room = $(this).val();
+    console.log(room);
+    app.hideMessages(room);
+  });
   
 
+  $('body').on('click', '.username', function(){
+    var username = $(this).html();
+    app.addFriend(username);
+    if(app.friendList[username]){
+      $('span:contains('+username+')').parent().addClass('highlight');
+    }
+  });
+
 });
 
-
+// $('div:contains("test")'
 
 
 ////////////// ESCAPE FUNCTION //////////
