@@ -10,6 +10,7 @@
 // Note: If you issue an XSS attack, please make it innocuous enough to be educational, rather than disruptive.
 
 // Allow users to select a username and send messagaes
+$(document).ready(function(){
 
 var app = {
   
@@ -62,22 +63,33 @@ var app = {
       var text = _.escape(msg.text);
       var message_div = $('<div>' + username + ' : ' + text + '</div>');
       $('#chats').append(message_div);
-  }
+  },
+  
+  addRoom : function(name){
+    $('#roomSelect').append('<option value="'+name+'">'+name+'</option>');
+  },
+  
+  addFriend : function(){}
   
 };
 
-var message = {
-  username: 'ERIC',
-  text: 'HEYYYY',
-  roomname: '4chan'
-};
-// To get you started, here's an example POST request. Note that any messages you POST to the server are viewable by everyone, so be nice.
 
 //app.send(message);
 app.fetch();
-setInterval(function(){app.fetch()}, 5000);
 
+setInterval(function(){app.fetch();}, 5000);
+
+
+/////////////////// Event Listeners ///////////////////////////
+$('form').submit(function(e){
+  e.preventDefault();
+  var message = $('.message').val();
+  var room = $('#roomSelect').val();
+  console.log($('.message').val());
+});
   
+
+});
 
 
 
