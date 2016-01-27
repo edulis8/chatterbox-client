@@ -12,30 +12,31 @@
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+    <script>
+      $(function(){ app.init(); })
+    </script>
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      <div>
-      <form class='form-message' action="">
-        <input type='text' class='message' id='message'>
-        <select id="roomSelect" name="rooms">
-          <option value="BoomBoom">BoomBoom</option>
-          <option value="Champagne">Champagne</option>
-          <option value="DarkRoom">Darkroom</option>
-          <option value="VIP">VIP Room</option>
-        </select>
-        <button type='submit'>Submit</button>
-      </form>
-      </div>
-      <div class="createRoom">
-        <p class="roomlink">Create a room.</p>
-        <form class="createRoomForm" action="">
-          <input type="text" class="roomInput">
-        </form>
-      </div>
-      <div id='chats' class='chat'></div>
+    <div class="spinner">
+      <img src="images/spiffygif_46x46.gif" alt="" />
     </div>
+
+    <div id="rooms">
+      Room:
+      <select name="" id="roomSelect">
+        
+      </select>
+    </div>
+
+    <form action="" method="post" id="send">
+      <input type="text" name='message' id="message" />
+      <input type="submit" class="submit" name="submit" />
+    </form>
+  <div id="chats">
+    
+  </div>
   </body>
 </html>
