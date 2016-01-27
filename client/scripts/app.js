@@ -19,6 +19,7 @@ app = {
   room : 'lobby',
   username : "anonymous",
   lastMessageId: 0,
+  friends : {},
 
   init : function(){
     app.username = window.location.search.slice(10);
@@ -28,9 +29,11 @@ app = {
     app.$chats = $('#chats');
     app.$roomSelect = $('#roomSelect');
     app.$send = $('#send');
+
     /////// Event Listeners /////////////
     app.$roomSelect.on('change', app.saveRoom);
     app.$send.on('submit', app.handleSubmit);
+    app.$main.on('click', '.username', app.addFriend);
 
     app.stopSpinner();
     app.fetch();
@@ -59,26 +62,26 @@ app = {
 
   },
   
-  send : function(message){
+  send : function(data){
     app.startSpinner();
+
+    app.$message.val('');
 
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: JSON.stringify(message),
+      data: JSON.stringify(data),
       contentType: 'application/json',
       success: function (data) {
         app.fetch();
-        console.log('suc',JSON.stringify(message));
+        console.log('suc',JSON.stringify(data));
         console.log('chatterbox: Message sent. Data: ', data);
       },
       error: function (reason) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
         console.error('chatterbox: Failed to send message. Error: ', reason);
-      },
-      complete: function(){
-        app.stopSpinner();
       }
+      
     });  
   },
   
@@ -156,6 +159,10 @@ app = {
         .attr('data-roomname', data.roomname)
         .appendTo($chat);
 
+      if(app.friends[data.username]===true){
+        $username.addClass('friend');
+      }
+
       var $message = $('<br /><span />');
       $message.text(data.text)
         .appendTo($chat);
@@ -169,8 +176,17 @@ app = {
     app.$roomSelect.append($option);
   },
   
-  addFriend : function(username){
-    app.friendList[username] = true;
+  addFriend : function(event){
+
+    var username = $(event.currentTarget).attr('data-username');
+    if(username !== undefined){
+      console.log('chatbox: adding %s as a friend', username);
+      app.friends[username] = true;
+
+      var selector = '[data-username="' + username.replace(/"/g, '\\\"') + '"]';
+      $(selector).addClass('friend');
+    }
+
   },
 
   
