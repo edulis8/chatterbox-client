@@ -18,7 +18,7 @@
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
       <div>
-      <form action="">
+      <form class='form-message' action="">
         <input type='text' class='message' id='message'>
         <select id="roomSelect" name="rooms">
           <option value="BoomBoom">BoomBoom</option>
@@ -28,6 +28,12 @@
         </select>
         <button type='submit'>Submit</button>
       </form>
+      </div>
+      <div class="createRoom">
+        <p class="roomlink">Create a room.</p>
+        <form class="createRoomForm" action="">
+          <input type="text" class="roomInput">
+        </form>
       </div>
       <div id='chats' class='chat'></div>
     </div>

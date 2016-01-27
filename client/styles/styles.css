@@ -88,3 +88,19 @@ form input[type=text] {
     font-weight: bold;
     background-color: yellow;
 }
+
+.roomInput {
+    display: none;
+}
+
+.createRoomForm {
+}
+
+.roomlink {
+    text-decoration: underline;
+}
+
+.createRoom {
+    margin-bottom: 40px;
+}
+

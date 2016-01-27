@@ -11,12 +11,15 @@
 
 // Allow users to select a username and send messagaes
 
-var app = {
+var app;
+$(document).ready(function(){
+app = {
   
-  server : 'https://api.parse.com/1/classes/chatterbox?order=-createdAt',
+  server : 'https://api.parse.com/1/classes/chatterbox',
   
   username : window.location.search.slice(10),
-  
+  lastMessageId: 0,
+
   init : function(value){
     return value;
   },
@@ -41,12 +44,19 @@ var app = {
   fetch: function(){
     $.ajax({
   // This is the url you should use to communicate with the parse API server.
-      url: 'https://api.parse.com/1/classes/chatterbox?order=-createdAt',
+      url: 'https://api.parse.com/1/classes/chatterbox',
       type: 'GET',
+      contentType: 'application/json',
+      data: { order: '-createdAt'},
       success: function (data) {
-        for(var i = 0; i < data.results.length; i++){
-          this.addMessage(data.results[i]);
+        var mostRecentMessage = data.results[0];
+        if (mostRecentMessage.objectId !== app.lastMessageId){
+          for(var i = 0; i < data.results.length; i++){
+            this.addMessage(data.results[i]);
+          }
+          app.lastMessageId = mostRecentMessage.objectId;
         }
+
       }.bind(this),      
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -59,28 +69,26 @@ var app = {
     $('#chats').empty();
   },
   hideMessages : function(room){
-    var messages = $('#chats').children();
-    console.log(messages)
-    // look at all messages, if class !== room we entered, hide them
-    // SELECTOR NOT WORKING, MAYBE CUZ NODES ARE ADDED DYNAMICALLY
-    console.log($('.'+room).html());
-    $('.'+room).hide();
-    //messages.not('.'+room).hide();
+    $('#chats').children().hide();
+    // hide all messages that aren't in our selected room
+    console.log('yo');
+    $('.'+room).show();
+    // messages.not('.'+room).hide();
   },
   addMessage : function(msg){
       var username = _.escape(msg.username);
       var text = _.escape(msg.text);
       var room = _.escape(msg.roomname);
-      var message_div = $('<div class = '+room+'"><span class = "username">' + username + '</span>' + ' : ' + text + '</div>');
+      var message_div = $('<div class = "'+room+'"><span class = "username">' + username + '</span>' + ' : ' + text + '</div>');
       $('#chats').append(message_div);
       app.addRoom(room);
   },
   
   addRoom : function(room){
     if(!app.roomList[room]){
-      app.roomList[room] = true
+      app.roomList[room] = true;
       $('#roomSelect').append('<option value="'+room+'">'+room+'</option>');
-    };
+    }
   },
   
   roomList : {
@@ -102,26 +110,15 @@ var app = {
 };
 
 
-//app.send(message);
 app.fetch();
 
-setInterval(function(){
-  app.clearMessages();
-  app.fetch();
-}, 100000);
+// setInterval(function(){
+//   app.clearMessages();
+//   app.fetch();
+// }, 5000);
 
 
-/////////////////// Event Listeners ///////////////////////////
-
-// var message = {
-//           username: 'Mel Brooks',
-//           text: 'It\'s good to be the king',
-//           roomname: 'lobby'
-//         };
-
-$(document).ready(function(){
-
-  $('form').submit(function(e){
+  $('.form-message').submit(function(e){
     e.preventDefault();
     var text = $('.message').val();
     var room = $('#roomSelect').val();
@@ -137,7 +134,7 @@ $(document).ready(function(){
   });
   
   $('select').change(function(){
-    var room = $(this).val();
+    var room = _.escape($(this).val());
     console.log(room);
     app.hideMessages(room);
   });
@@ -150,6 +147,20 @@ $(document).ready(function(){
       $('span:contains('+username+')').parent().addClass('highlight');
     }
   });
+
+  $('.createRoom').on('click', function(){
+    $('.roomInput').show();
+  });
+
+  $('.createRoom form').on('submit', function(event){
+    var room = _.escape($('.roomInput').val());
+    event.preventDefault();
+    // var room = _.escape($('.roomInput').val());
+    console.log(room);
+    app.addRoom(room);
+    $('.roomInput').hide();
+  });
+
 
 });
 
