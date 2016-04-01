@@ -4,18 +4,16 @@ A simple chat client app
 Chatterbox client
 ==============
 
-This is a project I completed as a student at Hack Reactor. This project was worked on with a pair. During the project we built a chat client consuming some parse API. The final client app has been refactored with various libraries/frameworks, from jQuery, to Backbone and ES6.
+This is a project I completed as a student at Hack Reactor. This project was worked on with a pair. During the project we built a chat client using the parse API. 
 
 ## Structure:
 
 The repository consist of
 
 - jQuery app
-- backbone app
-- backbone ES6 app
 - test Specs files.
 
-#### Chatterbox app - Jquery version / Backbone version / BackboneES6 version
+#### Chatterbox app - Jquery version
 
 The app allows the user to chose rooms and fetch/post messages from and to a parse based API backend.
 
@@ -37,13 +35,6 @@ Make sure to have a valid config.js inside the env folder.
 ### SpecRunner - mocha
 
 The specrunner contain both the tests for the client
-
-**Some code may be written in ES6 and may require to be transpiled in order to be tested**.
-
-### Requirements
-
-ES6 enabled on chrome `chrome://flags/#enable-javascript-harmony.`
-Babeljs.io for transipiling.
 
 ### Testing
 
