@@ -1,6 +1,3 @@
-# chatterbox-client
-A simple chat client app
-
 Chatterbox client
 ==============
 
