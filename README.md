@@ -12,7 +12,7 @@ The repository consist of
 
 ## Install:
 
-The project rely on bower for managing external libraries and dependencies, so be sure to first:
+The project relies on bower for managing external libraries and dependencies, so be sure to first:
 
 `bower install`
 
@@ -21,12 +21,12 @@ Make sure to have a valid config.js inside the env folder.
 
 ### SpecRunner - mocha
 
-The specrunner contain both the tests for the client
+The specrunner contains the tests for the client.
 
 ### Testing
 
 Tests are made with the [Mocha](https://github.com/mochajs/mocha) testing framework.
-Test are located in the ./spec directory. To run the Just open the spec runner file with chrome.
+Test are located in the ./spec directory. To run the just open the spec runner file with chrome.
 
 ```
 SpecRunner.html
